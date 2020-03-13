@@ -33,7 +33,7 @@ namespace LangComparison.Cs
     {
         private string Format(Dictionary<int, int> result)
         {
-            if (result.Count == 0)
+            if (result.Count == 0 || result.All(e => e.Value == 0))
             {
                 return "0";
             }
