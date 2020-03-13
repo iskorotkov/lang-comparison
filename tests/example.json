@@ -1,0 +1,22 @@
+{
+  "Item1": {
+    "Terms": [
+      {
+        "Coef": 1,
+        "Power": 1
+      },
+      {
+        "Coef": 2,
+        "Power": 3
+      }
+    ]
+  },
+  "Item2": {
+    "Terms": [
+      {
+        "Coef": 3,
+        "Power": 4
+      }
+    ]
+  }
+}
