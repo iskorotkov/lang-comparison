@@ -31,8 +31,12 @@ namespace LangComparison.Cs
 
     public class Writer
     {
-        public void Write(Dictionary<int, int> result)
+        private string Format(Dictionary<int, int> result)
         {
+            if (result.Count == 0)
+            {
+                return "0";
+            }
             var builder = new StringBuilder();
             foreach (var (power, coef) in result.OrderByDescending(r => r.Key))
             {
@@ -56,20 +60,34 @@ namespace LangComparison.Cs
                 if (power != 1)
                 {
                     builder.Append("^");
+                    if (power < 0)
+                    {
+                        builder.Append("(");
+                    }
                     builder.Append(power);
+                    if (power < 0)
+                    {
+                        builder.Append(")");
+                    }
                 }
             }
-            Console.WriteLine(builder.ToString().TrimStart('+'));
+            return builder.ToString().TrimStart('+');
         }
+
+        public void Write(Dictionary<int, int> result) => Console.WriteLine("Result = " + Format(result));
     }
 
     public class CsImplementation
     {
         public void Run(Reader reader, Writer writer)
         {
-            var (p1, p2) = reader?.Read() ?? throw new InvalidDataException();
-            p1.Terms = p1.Terms.OrderBy(t => t.Power).ToList();
-            var max = Math.Max(p1.Terms.Last().Power, p2.Terms.Max(t => t.Power));
+            var (p1, p2) = reader.Read();
+            if (p1.Terms.Count == 0 || p2.Terms.Count == 0)
+            {
+                writer.Write(new Dictionary<int, int>());
+                return;
+            }
+            var max = Math.Max(p1.Terms.Max(t => t.Power), p2.Terms.Max(t => t.Power));
             var result = new Dictionary<int, int>();
             foreach (var term1 in p1.Terms)
             {
@@ -100,7 +118,10 @@ namespace LangComparison.Cs
             Console.WriteLine("Select test file:\n");
             for (var i = 0; i < files.Length; i++)
             {
-                Console.WriteLine($"\t[{i + 1}] {files[i].TrimStart('.', '\\')}");
+                var name = files[i]
+                    .TrimStart('.', '\\')
+                    .Replace(@"\", " -> ");
+                Console.WriteLine($"\t[{i + 1}] {name}");
             }
             Console.WriteLine();
             var n = int.Parse(Console.ReadLine());
