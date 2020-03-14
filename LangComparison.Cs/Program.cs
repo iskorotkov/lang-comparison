@@ -73,7 +73,7 @@ namespace LangComparison.Cs
             return builder.ToString().TrimStart('+');
         }
 
-        public void Write(Dictionary<int, int> result) => Console.WriteLine("Result = " + Format(result));
+        public void Write(Dictionary<int, int> result) => Console.WriteLine($"Result = {Format(result)}\n");
     }
 
     public class CsImplementation
@@ -110,7 +110,6 @@ namespace LangComparison.Cs
     {
         public string SelectFilename()
         {
-            Directory.SetCurrentDirectory(@"..\..\..\..\tests");
             var files = Directory.GetFiles(@".\", "*.json", SearchOption.AllDirectories);
             Console.WriteLine("Select test file:\n");
             for (var i = 0; i < files.Length; i++)
@@ -133,10 +132,14 @@ namespace LangComparison.Cs
             var menu = new Menu();
             var reader = new Reader();
             var writer = new Writer();
-            var file = menu.SelectFilename();
-            var (p1, p2) = reader.Read(file);
-            var result = new CsImplementation().Run(p1, p2);
-            writer.Write(result);
+            Directory.SetCurrentDirectory(@"..\..\..\..\tests");
+            while (true)
+            {
+                var file = menu.SelectFilename();
+                var (p1, p2) = reader.Read(file);
+                var result = new CsImplementation().Run(p1, p2);
+                writer.Write(result);
+            }
         }
     }
 }
