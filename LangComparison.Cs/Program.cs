@@ -20,10 +20,9 @@ namespace LangComparison.Cs
 
     public class Reader
     {
-        public string Filename { get; set; }
-        public (Poly First, Poly Second) Read()
+        public (Poly First, Poly Second) Read(string filename)
         {
-            using var reader = new StreamReader(Filename);
+            using var reader = new StreamReader(filename);
             var jr = new JsonTextReader(reader);
             return new JsonSerializer().Deserialize<(Poly, Poly)>(jr);
         }
@@ -79,13 +78,11 @@ namespace LangComparison.Cs
 
     public class CsImplementation
     {
-        public void Run(Reader reader, Writer writer)
+        public Dictionary<int, int> Run(Poly p1, Poly p2)
         {
-            var (p1, p2) = reader.Read();
             if (p1.Terms.Count == 0 || p2.Terms.Count == 0)
             {
-                writer.Write(new Dictionary<int, int>());
-                return;
+                return new Dictionary<int, int>();
             }
             var max = Math.Max(p1.Terms.Max(t => t.Power), p2.Terms.Max(t => t.Power));
             var result = new Dictionary<int, int>();
@@ -105,7 +102,7 @@ namespace LangComparison.Cs
                     }
                 }
             }
-            writer?.Write(result);
+            return result;
         }
     }
 
@@ -133,8 +130,13 @@ namespace LangComparison.Cs
     {
         private static void Main()
         {
-            var file = new Menu().SelectFilename();
-            new CsImplementation().Run(new Reader { Filename = file }, new Writer());
+            var menu = new Menu();
+            var reader = new Reader();
+            var writer = new Writer();
+            var file = menu.SelectFilename();
+            var (p1, p2) = reader.Read(file);
+            var result = new CsImplementation().Run(p1, p2);
+            writer.Write(result);
         }
     }
 }
