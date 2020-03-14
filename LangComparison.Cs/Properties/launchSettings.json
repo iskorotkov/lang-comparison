@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "LangComparison.Cs": {
+      "commandName": "Project",
+      "workingDirectory": "C:\\Projects\\LangComparison"
+    }
+  }
+}

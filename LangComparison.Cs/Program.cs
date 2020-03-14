@@ -110,7 +110,7 @@ namespace LangComparison.Cs
     {
         public string SelectFilename()
         {
-            var files = Directory.GetFiles(@".\", "*.json", SearchOption.AllDirectories);
+            var files = Directory.GetFiles(@"tests\", "*.json", SearchOption.AllDirectories);
             Console.WriteLine("Select test file:\n");
             for (var i = 0; i < files.Length; i++)
             {
@@ -132,7 +132,6 @@ namespace LangComparison.Cs
             var menu = new Menu();
             var reader = new Reader();
             var writer = new Writer();
-            Directory.SetCurrentDirectory(@"..\..\..\..\tests");
             while (true)
             {
                 var file = menu.SelectFilename();
