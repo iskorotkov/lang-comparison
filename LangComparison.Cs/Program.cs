@@ -15,7 +15,7 @@ namespace LangComparison.Cs
 
     public class Poly
     {
-        public List<Term> Terms { get; set; }
+        public List<Term> Terms { get; set; } = new List<Term>();
     }
 
     public class Reader
