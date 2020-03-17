@@ -16,19 +16,19 @@ let solve first second =
         traverseFirst first second []
     makeList
 
-let reduce list =
+let reduce (list: (int * int) list) =
     List.sortBy snd list
     |> List.groupBy snd
-    |> List.map (function (k, v) -> (k, List.sumBy fst v))
-    |> List.filter (function (_, coef) -> coef <> 0)
+    |> List.map (function (k, v) -> (k, List.sumBy (fst >> int64) v))
+    |> List.filter (function (_, coef) -> coef <> 0L)
 
 let format =
     let rec build result list =
         let formatTerm term =
             let addCoef (_, coef) =
                 match coef with
-                | 1 -> string coef
-                | x when x > 0 -> "+" + string x
+                | 1L -> string coef
+                | x when x > 0L -> "+" + string x
                 | _ -> string coef
             let addX (power, _) =
                 if power = 0 then ""
@@ -47,7 +47,8 @@ let format =
 [<EntryPoint>]
 let main argv =
     let reader = Reader()
-    let input = reader.Read "tests/example.json"
+    //let input = reader.Read "tests/example.json"
+    let input = reader.Read "tests/performance/long polynomials.json"
     let (x, y) = input.ToTuple()
     let convert (poly: Poly) = Seq.toList poly.Terms
                                |> List.map (function term -> (term.Coef, term.Power))

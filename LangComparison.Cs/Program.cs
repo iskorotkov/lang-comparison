@@ -136,7 +136,11 @@ namespace LangComparison.Cs
             {
                 var file = menu.SelectFilename();
                 var (p1, p2) = reader.Read(file);
-                var result = new CsImplementation().Run(p1, p2);
+                Dictionary<int, int> result;
+                checked
+                {
+                    result = new CsImplementation().Run(p1, p2);
+                }
                 writer.Write(result);
             }
         }
