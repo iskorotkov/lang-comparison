@@ -1,5 +1,6 @@
 ﻿open System
 open LangComparison.Cs
+open System
 
 let solve first second =
     let makeList =
@@ -23,26 +24,27 @@ let reduce (list: (int * int) list) =
     |> List.filter (function (_, coef) -> coef <> 0L)
 
 let format =
-    let rec build result list =
-        let formatTerm term =
-            let addCoef (_, coef) =
+    let rec formatExpr result list =
+        let formatTerm amendPlus (power, coef) =
+            let addCoef =
                 match coef with
                 | 1L -> string coef
-                | x when x > 0L -> "+" + string x
+                | x when x > 0L -> if amendPlus then string x else "+" + string x
                 | _ -> string coef
-            let addX (power, _) =
+            let addX =
                 if power = 0 then ""
                 else "x"
-            let addPower (power, _) =
+            let addPower =
                 match power with
                 | 0 | 1 -> ""
                 | x when x > 0 -> "^" + string x
                 | _ -> "^(" + string power + ")"
-            addCoef term + addX term + addPower term
+            addCoef + addX + addPower
         match list with
         | [] -> result
-        | head::tail -> build (formatTerm head + result) tail
-    build ""
+        | [head] -> formatExpr (formatTerm true head + result) []
+        | head::tail -> formatExpr (formatTerm false head + result) tail
+    formatExpr ""
 
 [<EntryPoint>]
 let main argv =
