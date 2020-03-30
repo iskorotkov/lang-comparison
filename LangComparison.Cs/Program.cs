@@ -43,18 +43,26 @@ namespace LangComparison.Cs
                 {
                     continue;
                 }
+
                 if (coef > 0)
                 {
                     builder.Append("+");
                 }
-                if (coef != 1)
+
+                if (coef == -1 && power != 0)
+                {
+                    builder.Append("-");
+                }
+                else if (coef != 1 || power == 0)
                 {
                     builder.Append(coef);
                 }
+
                 if (power == 0)
                 {
                     continue;
                 }
+
                 builder.Append("x");
                 if (power != 1)
                 {
@@ -73,7 +81,10 @@ namespace LangComparison.Cs
             return builder.ToString().TrimStart('+');
         }
 
-        public void Write(Dictionary<int, int> result) => Console.WriteLine($"Result = {Format(result)}\n");
+        public void Write(Dictionary<int, int> result)
+        {
+            Console.WriteLine($"Result = {Format(result)}\n");
+        }
     }
 
     public class CsImplementation
@@ -84,7 +95,7 @@ namespace LangComparison.Cs
             {
                 return new Dictionary<int, int>();
             }
-            var max = Math.Max(p1.Terms.Max(t => t.Power), p2.Terms.Max(t => t.Power));
+
             var result = new Dictionary<int, int>();
             foreach (var term1 in p1.Terms)
             {
