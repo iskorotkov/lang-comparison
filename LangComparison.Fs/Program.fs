@@ -1,6 +1,5 @@
 ﻿open System
 open LangComparison.Cs
-open System
 
 let solve first second =
     let makeList =
@@ -27,10 +26,13 @@ let format =
     let rec formatExpr result list =
         let formatTerm amendPlus (power, coef) =
             let addCoef =
-                match coef with
-                | 1L -> string coef
-                | x when x > 0L -> if amendPlus then string x else "+" + string x
-                | _ -> string coef
+                match (coef, power, amendPlus) with
+                | (-1L, p, _) when p <> 0 -> "-" // {-1} x (-inf; 0)U(0; +inf)
+                | (c, _, _) when c < 0L -> string c // ((-inf; -1)U(-1; 0) x D) U ({-1} x {0})
+                | (1L, p, false) when p <> 0 -> "+" // {1} x (-inf; 0)U(0; +inf)
+                | (1L, p, true) when p <> 0 -> ""
+                | (c, _, false) -> "+" + string c // ((0; 1)U(1; +inf) x D) U ({1} U {0})
+                | (c, _, true) -> string c
             let addX =
                 if power = 0 then ""
                 else "x"
@@ -50,12 +52,15 @@ let format =
 let main argv =
     let reader = Reader()
     //let input = reader.Read "tests/example.json"
-    let input = reader.Read "tests/performance/long polynomials.json"
+    //let input = reader.Read "tests/performance/long polynomials.json"
+    //let input = reader.Read "tests/correctness/negative powers.json"
+    let input = reader.Read "tests/output/0.json"
+
     let (x, y) = input.ToTuple()
     let convert (poly: Poly) = Seq.toList poly.Terms
                                |> List.map (function term -> (term.Coef, term.Power))
     solve (convert x) (convert y)
     |> reduce
     |> format
-    |> printfn "%A"
+    |> printfn "%s"
     0
